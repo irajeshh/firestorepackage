@@ -1,0 +1,23 @@
+name: firestorepackage
+description: "A new Flutter package project."
+version: 0.0.1
+publish_to: none
+homepage:
+
+environment:
+  sdk: '>=3.3.4 <4.0.0'
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  # LOCAL
+  extensions:
+    path: ../extensions
+  models:
+    path: ../models
+  cloud_firestore: 5.0.1
+
+dev_dependencies:
+  lintingpackage:
+      path: ../lintingpackage
