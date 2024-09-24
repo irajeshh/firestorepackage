@@ -1,0 +1,15 @@
+include: package:lintingpackage/flutter.yaml
+analyzer:
+  language:
+    strict-casts: true
+    strict-raw-types: true
+  errors:
+    deprecated_member_use_from_same_package: ignore
+    unnecessary_null_comparison: ignore
+  exclude:
+    - "bin/cache/**"
+      # Ignore protoc generated files
+    - "dev/conductor/lib/proto/*"
+
+linter:
+  rules:

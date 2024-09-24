@@ -1,8 +1,10 @@
 part of '../firestorepackage.dart';
 
 // ignore: subtype_of_sealed_class
+///Default firestore doc model
 class InvalidDoc extends Doc {
   @override
+  // ignore: type_annotate_public_apis, always_declare_return_types
   operator [](final Object field) {
     throw UnimplementedError();
   }
@@ -27,5 +29,5 @@ class InvalidDoc extends Doc {
   SnapshotMetadata get metadata => throw UnimplementedError();
 
   @override
-  DocumentReference<Json> get reference => throw UnimplementedError();
+  Ref get reference => throw UnimplementedError();
 }

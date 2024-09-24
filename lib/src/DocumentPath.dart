@@ -54,8 +54,8 @@ class DocumentPath extends Model {
 
   @override
   DocumentPath copyWith({
-    String? collection,
-    String? id,
+    final String? collection,
+    final String? id,
   }) {
     return DocumentPath(
       collection: collection ?? this.collection,

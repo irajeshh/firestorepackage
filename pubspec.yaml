@@ -5,7 +5,7 @@ publish_to: none
 homepage:
 
 environment:
-  sdk: '>=3.3.4 <4.0.0'
+  sdk: ^3.5.3
   flutter: ">=1.17.0"
 
 dependencies:
@@ -16,7 +16,11 @@ dependencies:
     path: ../extensions
   models:
     path: ../models
-  cloud_firestore: 5.0.1
+  # FIREBASE
+  firebase_core: 3.5.0
+  firebase_core_web: 2.18.1
+  firebase_core_platform_interface: 5.3.0
+  cloud_firestore: 5.4.2
 
 dev_dependencies:
   lintingpackage:
