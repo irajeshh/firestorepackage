@@ -1,33 +1,40 @@
 part of '../firestorepackage.dart';
 
+
 // ignore: subtype_of_sealed_class
-///Default firestore doc model
 class InvalidDoc extends Doc {
+  bool _exists = false;
+  Json? _data;
+  String _id = 'invalid';
+
+  set exists(final bool v) => _exists = v;
+  void setData(final Json d) => _data = d;
+  void setID(final String? i) {
+    if (i != null) {
+      _id = i;
+    }
+  }
+
   @override
-  // ignore: type_annotate_public_apis, always_declare_return_types
+  bool get exists => _exists;
+
+  @override
+  String get id => _id;
+
+  @override
+  Json? data() => _data ?? <String, dynamic>{};
+
+  @override
+  Object? get(final Object field) => data();
+
+  @override
   operator [](final Object field) {
     throw UnimplementedError();
   }
 
   @override
-  Json? data() {
-    return <String, dynamic>{};
-  }
-
-  @override
-  bool get exists => false;
-
-  @override
-  Object? get(final Object field) {
-    return data();
-  }
-
-  @override
-  String get id => 'invalid';
-
-  @override
   SnapshotMetadata get metadata => throw UnimplementedError();
 
   @override
-  Ref get reference => throw UnimplementedError();
+  DocumentReference<Json> get reference => throw UnimplementedError();
 }
