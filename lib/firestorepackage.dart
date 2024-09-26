@@ -5,6 +5,8 @@ import 'package:extensions/extensions.dart';
 import 'package:flutter/foundation.dart';
 import 'package:models/models.dart';
 
+export 'package:models/models.dart';
+
 part 'src/DocumentPath.dart';
 part 'src/Extensions.dart';
 part 'src/InvalidDoc.dart';
