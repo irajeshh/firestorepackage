@@ -13,3 +13,11 @@ part 'src/InvalidDoc.dart';
 part 'src/Model.dart';
 part 'src/Service.dart';
 part 'src/Typedefs.dart';
+
+///A configuration file which can be called from parent project
+class FirestorepackageConfig {
+  FirestorepackageConfig._();
+
+  ////ProductID must be initialized inorder to get collection & document url
+  static String productID = 'unknown';
+}
