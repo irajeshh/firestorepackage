@@ -18,6 +18,6 @@ part 'src/Typedefs.dart';
 class FirestorepackageConfig {
   FirestorepackageConfig._();
 
-  ////ProductID must be initialized inorder to get collection & document url
-  static String productID = 'unknown';
+  ////projectID must be initialized inorder to get collection & document url
+  static String projectID = 'unknown';
 }

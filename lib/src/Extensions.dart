@@ -10,7 +10,7 @@ extension DocExtension on Doc {
   ///Returns Json from Doc
   Json get toJson => data() ?? <String, dynamic>{};
 
-  static final String _baseDB = 'https://console.firebase.google.com/project/${FirestorepackageConfig.productID}/firestore/databases/-default-/data/~2F';
+  static final String _baseDB = 'https://console.firebase.google.com/project/${FirestorepackageConfig.projectID}/firestore/databases/-default-/data/~2F';
 
   ///Firestore link of the collection of the document
   String get collectionLink => exists ? '$_baseDB${docPath.collection}' : _baseDB;
