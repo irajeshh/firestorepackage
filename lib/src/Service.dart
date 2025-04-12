@@ -107,4 +107,10 @@ class FirestoreService {
     }
     return deleted;
   }
+
+  ///To check if the given document id exists in the given collection
+  static Future<bool> checkExists(DocumentPath documentPath) async {
+    final Doc doc = await get(documentPath);
+    return doc.exists;
+  }
 }
