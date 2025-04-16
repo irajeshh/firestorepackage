@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:extensions/extensions.dart';
 import 'package:flutter/foundation.dart';
 import 'package:models/models.dart';
-
+export 'package:cloud_firestore/cloud_firestore.dart';
 export 'package:models/models.dart';
 
 part 'src/DocumentPath.dart';
