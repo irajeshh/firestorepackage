@@ -1,13 +1,12 @@
 part of '../firestorepackage.dart';
 
-
 // ignore: subtype_of_sealed_class
 class InvalidDoc extends Doc {
   bool _exists = false;
   Json? _data;
   String _id = 'invalid';
 
-  set exists(final bool v) => _exists = v;
+  void setExists(final bool v) => _exists = v;
   void setData(final Json d) => _data = d;
   void setID(final String? i) {
     if (i != null) {
