@@ -6,12 +6,22 @@ class InvalidDoc extends Doc {
   Json? _data;
   String _id = 'invalid';
 
-  void setExists(final bool v) => _exists = v;
-  void setData(final Json d) => _data = d;
-  void setID(final String? i) {
-    if (i != null) {
-      _id = i;
-    }
+  // void setExists(final bool v) => _exists = v;
+  // void setData(final Json d) => _data = d;
+  // void setID(final String? i) {
+  //   if (i != null) {
+  //     _id = i;
+  //   }
+  // }
+
+  void set({
+    String? id,
+    bool? exists,
+    Json? data,
+  }){
+    _id = id ?? _id;
+    _exists = exists ?? _exists;
+    _data = data ?? _data;    
   }
 
   @override
