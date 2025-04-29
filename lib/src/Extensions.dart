@@ -17,7 +17,7 @@ extension DocExtension on Doc {
 
   ///Firestore link of the document
   String get documentLink {
-    if (exists) {
+    if (exists && id != 'invalid') {
       final String c = collectionLink;
       final String d = docPath.id.replaceAll('+', '%2B');
       return '$c~2F$d';
