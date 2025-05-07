@@ -27,6 +27,7 @@ extension DocExtension on Doc {
   }
 }
 
+///Customized snippets to simplify the queries
 extension QueryExtension on Queryy {
   ///To simplify the queries accross any projects
   Queryy applySearch(final List<String>? tags) {
@@ -36,6 +37,37 @@ extension QueryExtension on Queryy {
         _tags = _tags..removeRange(9, _tags.length - 1);
       }
       return where('tags', arrayContainsAny: _tags);
+    } else {
+      return this;
+    }
+  }
+
+  ///Only query if the values are passed
+  Queryy whereIf(final String key, final Object? value) {
+    if (value != null) {
+      return where(key, isEqualTo: value);
+    } else {
+      return this;
+    }
+  }
+
+  ///Only startAfter if the doc is not null
+  Queryy startAfterDoc(final Doc? doc) {
+    if (doc != null) {
+      return startAfterDocument(doc);
+    }
+    return this;
+  }
+
+  ///Only sort if the key if the values are empty to avoid creating indices
+  Queryy orderByIf({
+    final String key = 'createdAt',
+    final bool descending = true,
+    required final List<Object?> valuesTobeEmpty,
+  }) {
+    bool allValsEmpty = valuesTobeEmpty.where((final Object? v) => v != null).isEmpty;
+    if (allValsEmpty) {
+      return orderBy(key, descending: descending);
     } else {
       return this;
     }
