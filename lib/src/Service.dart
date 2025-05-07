@@ -11,6 +11,9 @@ class FirestoreService {
   ///Instance of the firestore
   static FirebaseFirestore firestore = FirebaseFirestore.instance;
 
+  ///To get the collection reference
+  static Queryy collection(final String collectionID) => firestore.collection(collectionID);
+
   ///Default limit of a query result
   static const int queryLimit = 30;
 
@@ -109,7 +112,7 @@ class FirestoreService {
   }
 
   ///To check if the given document id exists in the given collection
-  static Future<bool> checkExists(DocumentPath documentPath) async {
+  static Future<bool> checkExists(final DocumentPath documentPath) async {
     final Doc doc = await get(documentPath);
     return doc.exists;
   }
