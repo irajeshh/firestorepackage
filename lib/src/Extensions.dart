@@ -45,7 +45,11 @@ extension QueryExtension on Queryy {
   ///Only query if the values are passed
   Queryy whereIf(final String key, final Object? value) {
     if (value != null) {
-      return where(key, isEqualTo: value);
+      if (value == NULL) {
+        return where(key, isNull: true);
+      } else {
+        return where(key, isEqualTo: value);
+      }
     } else {
       return this;
     }
