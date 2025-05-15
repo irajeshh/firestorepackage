@@ -56,9 +56,9 @@ extension QueryExtension on Queryy {
   }
 
   ///Only startAfter if the doc is not null
-  Queryy startAfterDoc(final Doc? doc) {
-    if (doc != null) {
-      return startAfterDocument(doc);
+  Queryy startAfterDoc(final Doc? lastDoc) {
+    if (lastDoc != null) {
+      return startAfterDocument(lastDoc);
     }
     return this;
   }
