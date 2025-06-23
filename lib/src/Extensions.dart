@@ -1,5 +1,14 @@
 part of '../firestorepackage.dart';
 
+enum WhereType {
+  isEqualTo,
+  isNotEqualTo,
+  isGreaterThan,
+  isLessThan,
+  arrayContains,
+  arrayContainsAny,
+}
+
 // ignore: public_member_api_docs
 extension DocExtension on Doc {
   ///Returns the [DocumentPath] for this Doc
@@ -43,12 +52,33 @@ extension QueryExtension on Queryy {
   }
 
   ///Only query if the values are passed
-  Queryy whereIf(final String key, final Object? value) {
+  Queryy whereIf(
+    final String key,
+    final Object? value, {
+    final WhereType type = WhereType.isEqualTo,
+  }) {
     if (value != null) {
       if (value == NULL) {
         return where(key, isNull: true);
       } else {
-        return where(key, isEqualTo: value);
+        switch (type) {
+          case WhereType.isEqualTo:
+            return where(key, isEqualTo: value);
+          case WhereType.isNotEqualTo:
+            return where(key, isNotEqualTo: value);
+          case WhereType.isGreaterThan:
+            return where(key, isGreaterThan: value);
+          case WhereType.isLessThan:
+            return where(key, isLessThan: value);
+          case WhereType.arrayContains:
+            return where(key, arrayContains: value);
+          case WhereType.arrayContainsAny:
+            if (value is List<Object>) {
+              return where(key, arrayContainsAny: value);
+            } else {
+              return where(key, isEqualTo: value);
+            }
+        }
       }
     } else {
       return this;
@@ -69,7 +99,7 @@ extension QueryExtension on Queryy {
     final bool descending = true,
     required final List<Object?> valuesTobeEmpty,
   }) {
-    bool allValsEmpty = valuesTobeEmpty.where((final Object? v) => v != null).isEmpty;
+    final bool allValsEmpty = valuesTobeEmpty.where((final Object? v) => v != null).isEmpty;
     if (allValsEmpty) {
       return orderBy(key, descending: descending);
     } else {
