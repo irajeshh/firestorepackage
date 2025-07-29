@@ -7,6 +7,7 @@ enum WhereType {
   isLessThan,
   arrayContains,
   arrayContainsAny,
+  whereIn,
 }
 
 // ignore: public_member_api_docs
@@ -72,9 +73,31 @@ extension QueryExtension on Queryy {
             return where(key, isLessThan: value);
           case WhereType.arrayContains:
             return where(key, arrayContains: value);
+          case WhereType.whereIn:
+            if (value is List<Object>) {
+              List<Object> _values = <Object>[...value];
+              if (_values.isNotEmpty) {
+                if (_values.length > 9) {
+                  _values = _values..removeRange(9, _values.length - 1);
+                }
+                return where(key, whereIn: _values);
+              } else {
+                return this;
+              }
+            } else {
+              return where(key, isEqualTo: value);
+            }
           case WhereType.arrayContainsAny:
             if (value is List<Object>) {
-              return where(key, arrayContainsAny: value);
+              List<Object> _tags = <Object>[...value];
+              if (_tags.isNotEmpty) {
+                if (_tags.length > 9) {
+                  _tags = _tags..removeRange(9, _tags.length - 1);
+                }
+                return where(key, arrayContainsAny: _tags);
+              } else {
+                return this;
+              }
             } else {
               return where(key, isEqualTo: value);
             }
