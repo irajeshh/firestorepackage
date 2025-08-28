@@ -24,15 +24,20 @@ class FirestoreService {
   ///To read/get a document for the given path
   static Future<Doc> get(final DocumentPath documentPath) async {
     Doc documentSnapshot = InvalidDoc();
-    try {
-      assert(
-        documentPath != DocumentPath.invalid,
-        'Invalid DocumentPath: $documentPath',
-      );
-      documentSnapshot = await _getReference(documentPath).get();
-    } on Exception catch (exception) {
-      debugPrint('Error $exception');
+    if (documentPath.collection.isValid && documentPath.id.isValid) {
+      try {
+        assert(
+          documentPath != DocumentPath.invalid,
+          'Invalid DocumentPath: $documentPath',
+        );
+        documentSnapshot = await _getReference(documentPath).get();
+      } on Exception catch (exception) {
+        debugPrint('Error $exception');
+      }
+    } else {
+      print('Empty path: ${documentPath.collection}/${documentPath.id}');
     }
+
     return documentSnapshot;
   }
 
