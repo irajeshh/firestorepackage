@@ -8,6 +8,7 @@ enum WhereType {
   arrayContains,
   arrayContainsAny,
   whereIn,
+  whereNotIn,
 }
 
 // ignore: public_member_api_docs
@@ -81,6 +82,20 @@ extension QueryExtension on Queryy {
                   _values = _values..removeRange(9, _values.length - 1);
                 }
                 return where(key, whereIn: _values);
+              } else {
+                return this;
+              }
+            } else {
+              return where(key, isEqualTo: value);
+            }
+          case WhereType.whereNotIn:
+            if (value is List<Object>) {
+              List<Object> _values = <Object>[...value];
+              if (_values.isNotEmpty) {
+                if (_values.length > 9) {
+                  _values = _values..removeRange(9, _values.length - 1);
+                }
+                return where(key, whereNotIn: _values);
               } else {
                 return this;
               }
