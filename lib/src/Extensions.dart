@@ -61,7 +61,7 @@ extension QueryExtension on Queryy {
   }) {
     if (value != null) {
       if (value == NULL) {
-        return where(key, isNull: true);
+        return where(key, isNull: type == WhereType.isEqualTo);
       } else {
         switch (type) {
           case WhereType.isEqualTo:
