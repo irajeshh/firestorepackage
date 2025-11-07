@@ -18,7 +18,8 @@ class FirestoreService {
   static const int queryLimit = 30;
 
   static Ref _getReference(final DocumentPath documentPath) {
-    return firestore.collection(documentPath.collection).doc(documentPath.id);
+    ///To comply with CSOS PermitID system we are replacing '/' with '~' in document IDs
+    return firestore.collection(documentPath.collection).doc(documentPath.id.replaceAll('/', '~'));
   }
 
   ///To read/get a document for the given path
