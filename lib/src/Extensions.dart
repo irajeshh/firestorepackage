@@ -4,7 +4,9 @@ enum WhereType {
   isEqualTo,
   isNotEqualTo,
   isGreaterThan,
+  isGreaterThanOrEqualTo,
   isLessThan,
+  isLessThanOrEqualTo,
   arrayContains,
   arrayContainsAny,
   whereIn,
@@ -21,7 +23,8 @@ extension DocExtension on Doc {
   ///Returns Json from Doc
   Json get toJson => data() ?? <String, dynamic>{};
 
-  static final String _baseDB = 'https://console.firebase.google.com/project/${FirestorepackageConfig.projectID}/firestore/databases/-default-/data/~2F';
+  static final String _baseDB =
+      'https://console.firebase.google.com/project/${FirestorepackageConfig.projectID}/firestore/databases/-default-/data/~2F';
 
   ///Firestore link of the collection of the document
   String get collectionLink => exists ? '$_baseDB${docPath.collection}' : _baseDB;
@@ -70,6 +73,10 @@ extension QueryExtension on Queryy {
             return where(key, isNotEqualTo: value);
           case WhereType.isGreaterThan:
             return where(key, isGreaterThan: value);
+          case WhereType.isGreaterThanOrEqualTo:
+            return where(key, isGreaterThanOrEqualTo: value);
+          case WhereType.isLessThanOrEqualTo:
+            return where(key, isLessThanOrEqualTo: value);
           case WhereType.isLessThan:
             return where(key, isLessThan: value);
           case WhereType.arrayContains:
