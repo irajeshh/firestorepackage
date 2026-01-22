@@ -65,7 +65,7 @@ class FirestoreService {
   }) async {
     bool created = false;
     try {
-      await _getReference(documentPath).set(data, SetOptions(merge: true));
+      await _getReference(documentPath).set(data, SetOptions(merge: merge));
       created = true;
     } on Exception catch (exception) {
       debugPrint('Error $exception');
