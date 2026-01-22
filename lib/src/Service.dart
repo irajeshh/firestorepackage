@@ -61,6 +61,7 @@ class FirestoreService {
   static Future<bool> set({
     required final Json data,
     required final DocumentPath documentPath,
+    bool merge = true,
   }) async {
     bool created = false;
     try {
