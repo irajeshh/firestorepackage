@@ -79,6 +79,7 @@ class FirestoreService {
     required final DocumentPath documentPath,
     required final Json data,
     final bool createIfNotFound = false,
+    final VoidCallback? ifNotExistFn,
   }) async {
     bool updated = false;
     final DocumentReference<Json> reference = _getReference(documentPath);
@@ -93,14 +94,22 @@ class FirestoreService {
         }
       });
     } on Exception catch (exception) {
-      if (createIfNotFound) {
-        debugPrint("Creating as the doc doesn't exists...");
-        final bool created = await set(data: data, documentPath: documentPath);
-        updated = created;
-        debugPrint('Created: $created');
+      final bool notExist = '$exception'.contains('cloud_firestore/not-found');
+      if (notExist) {
+        if (createIfNotFound) {
+          debugPrint("Creating as the doc doesn't exists...");
+          final bool created = await set(data: data, documentPath: documentPath);
+          updated = created;
+          debugPrint('Created: $created');
+        } else {
+          updated = false;
+          debugPrint('Error info: $exception');
+        }
+        if (ifNotExistFn != null) {
+          ifNotExistFn();
+        }
       } else {
-        updated = false;
-        debugPrint('Error info: $exception');
+        debugPrint('Some other error: $exception');
       }
     }
     return updated;
