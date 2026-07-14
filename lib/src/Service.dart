@@ -11,6 +11,12 @@ class FirestoreService {
   ///Instance of the firestore
   static FirebaseFirestore firestore = FirebaseFirestore.instance;
 
+  /// Optional cache delegate to store/restore document data locally.
+  static FirestoreCacheDelegate? cacheDelegate;
+
+  /// Only these collections will be cached. If empty, nothing is cached.
+  static List<String> cachedCollections = [];
+
   ///To get the collection reference
   static Queryy collection(final String collectionID) => firestore.collection(collectionID);
 
@@ -22,16 +28,48 @@ class FirestoreService {
     return firestore.collection(documentPath.collection).doc(documentPath.id.replaceAll('/', '~'));
   }
 
+  static String _encodePart(String part) => base64Url.encode(utf8.encode(part));
+  static String _cacheKey(DocumentPath path) =>
+      'db_cache_${_encodePart(path.collection)}_${_encodePart(path.id)}';
+  static String _timeKey(DocumentPath path) =>
+      'db_time_${_encodePart(path.collection)}_${_encodePart(path.id)}';
+
   ///To read/get a document for the given path
-  static Future<Doc> get(final DocumentPath documentPath) async {
+  static Future<Doc> get(final DocumentPath documentPath, {bool useCache = true}) async {
     Doc documentSnapshot = InvalidDoc();
     if (documentPath.collection.isValid && documentPath.id.isValid) {
+      final String cacheKey = _cacheKey(documentPath);
+      final bool shouldCache =
+          useCache && cacheDelegate != null && cachedCollections.contains(documentPath.collection);
+
+      if (shouldCache) {
+        try {
+          final String? cachedStr = await cacheDelegate!.getString(cacheKey);
+          if (cachedStr != null) {
+            final Json cachedMap = jsonDecode(cachedStr) as Json;
+            return CachedDoc(documentPath.id, documentPath.collection, cachedMap);
+          }
+        } catch (e) {
+          debugPrint('Error reading cache for ${documentPath.collection}/${documentPath.id}: $e');
+        }
+      }
+
       try {
         assert(
           documentPath != DocumentPath.invalid,
           'Invalid DocumentPath: $documentPath',
         );
         documentSnapshot = await _getReference(documentPath).get();
+
+        if (shouldCache && documentSnapshot.exists && documentSnapshot.data() != null) {
+          try {
+            await cacheDelegate!.set(cacheKey, jsonEncode(documentSnapshot.data()));
+            final String timeKey = _timeKey(documentPath);
+            await cacheDelegate!.set(timeKey, DateTime.now().millisecondsSinceEpoch.toString());
+          } catch (e) {
+            debugPrint('Error writing cache for ${documentPath.collection}/${documentPath.id}: $e');
+          }
+        }
       } on Exception catch (exception) {
         debugPrint('Error $exception');
       }
@@ -67,6 +105,13 @@ class FirestoreService {
     try {
       await _getReference(documentPath).set(data, SetOptions(merge: merge));
       created = true;
+
+      if (cacheDelegate != null && cachedCollections.contains(documentPath.collection)) {
+        final String cacheKey = _cacheKey(documentPath);
+        await cacheDelegate!.set(cacheKey, jsonEncode(data));
+        final String timeKey = _timeKey(documentPath);
+        await cacheDelegate!.set(timeKey, DateTime.now().millisecondsSinceEpoch.toString());
+      }
     } on Exception catch (exception) {
       debugPrint('Error $exception');
     }
@@ -93,6 +138,13 @@ class FirestoreService {
           debugPrint('Transaction Error $exception');
         }
       });
+
+      if (cacheDelegate != null) {
+        final String cacheKey = _cacheKey(documentPath);
+        await cacheDelegate!.delete(cacheKey);
+        final String timeKey = _timeKey(documentPath);
+        await cacheDelegate!.delete(timeKey);
+      }
     } on Exception catch (exception) {
       final bool notExist = '$exception'.contains('cloud_firestore/not-found');
       if (notExist) {
@@ -121,6 +173,12 @@ class FirestoreService {
     try {
       await _getReference(documentPath).delete();
       deleted = true;
+      if (cacheDelegate != null) {
+        final String cacheKey = _cacheKey(documentPath);
+        await cacheDelegate!.delete(cacheKey);
+        final String timeKey = _timeKey(documentPath);
+        await cacheDelegate!.delete(timeKey);
+      }
     } on Exception catch (exception) {
       debugPrint('Error $exception');
     }
@@ -129,7 +187,7 @@ class FirestoreService {
 
   ///To check if the given document id exists in the given collection
   static Future<bool> checkExists(final DocumentPath documentPath) async {
-    final Doc doc = await get(documentPath);
+    final Doc doc = await get(documentPath, useCache: false);
     return doc.exists;
   }
 }

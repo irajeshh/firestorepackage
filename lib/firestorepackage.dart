@@ -1,5 +1,6 @@
 library firestorepackage;
 
+import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:extensions/extensions.dart';
 import 'package:flutter/foundation.dart';
@@ -15,6 +16,8 @@ part 'src/InvalidDoc.dart';
 part 'src/Model.dart';
 part 'src/Service.dart';
 part 'src/Typedefs.dart';
+part 'src/CacheDelegate.dart';
+part 'src/CachedDoc.dart';
 
 ///A configuration file which can be called from parent project
 class FirestorepackageConfig {
